@@ -3,7 +3,7 @@
 <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Ets_quebec_logo.png" width="250">   
 ÉTS - LOG430 - Architecture logicielle
 
-L'utilisation des SIAG est **autorisée** dans le Labo 0 pour toutes les activités. Voici quelques exemples de bonne utilisation (à suivre) et mauvaise utilisation (à ne pas suivre) :
+L'utilisation des SIAG est **autorisée** dans ce labo pour toutes les activités. Voici quelques exemples de bonne utilisation (à suivre) et mauvaise utilisation (à ne pas suivre) :
 
 ### Bonne utilisation
 - ✅ Assistance à l'installation, à la configuration et au déploiement, tant dans l'environnement de développement que dans celui de production

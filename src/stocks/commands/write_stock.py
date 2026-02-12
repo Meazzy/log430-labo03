@@ -6,6 +6,7 @@ Auteurs : Gabriel C. Ullmann, Fabio Petrillo, 2025
 from sqlalchemy import text
 from stocks.models.stock import Stock
 from db import get_redis_conn, get_sqlalchemy_session
+from stocks.models.product import Product
 
 def set_stock_for_product(product_id, quantity):
     """Set stock quantity for product in MySQL"""
@@ -71,6 +72,9 @@ def update_stock_redis(order_items, operation):
         return
     r = get_redis_conn()
     stock_keys = list(r.scan_iter("stock:*"))
+
+    session = get_sqlalchemy_session()
+
     if stock_keys:
         pipeline = r.pipeline()
         for item in order_items:
@@ -81,6 +85,9 @@ def update_stock_redis(order_items, operation):
                 product_id = item['product_id']
                 quantity = item['quantity']
             # TODO: ajoutez plus d'information sur l'article
+
+            product_info = session.query(Product).filter_by(id=product_id).first()
+
             current_stock = r.hget(f"stock:{product_id}", "quantity")
             current_stock = int(current_stock) if current_stock else 0
             
@@ -88,12 +95,21 @@ def update_stock_redis(order_items, operation):
                 new_quantity = current_stock + quantity
             else:  
                 new_quantity = current_stock - quantity
-            
-            pipeline.hset(f"stock:{product_id}", "quantity", new_quantity)
+            if product_info:
+                pipeline.hset(f"stock:{product_id}", mapping={
+                    "quantity": new_quantity,
+                    "name": product_info.name,   
+                    "sku": product_info.sku,     
+                    "price": product_info.price  
+                })
+            else:
+                pipeline.hset(f"stock:{product_id}", mapping={"quantity": new_quantity})
         
         pipeline.execute()
+        session.close()
     
     else:
+        session.close()
         _populate_redis_from_mysql(r)
 
 def _populate_redis_from_mysql(redis_conn):

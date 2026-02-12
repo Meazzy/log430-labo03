@@ -1,0 +1,25 @@
+name: CD Deploy
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Deploy code
+        run: |
+          cd /root/log430-labo03
+          
+          git fetch origin
+          git reset --hard origin/main
+
+          cat > .env << 'EOF'
+          ${{ secrets.ENV_FILE }}
+          EOF
+          chmod 600 .env
+
+          docker compose up -d --build
+          docker ps

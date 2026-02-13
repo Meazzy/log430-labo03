@@ -22,4 +22,5 @@ jobs:
           chmod 600 .env
 
           docker compose up -d --build
+          
           docker ps

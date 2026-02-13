@@ -30,6 +30,7 @@ jobs:
           echo "REDIS_PORT=6379" >> .env
           echo "REDIS_DB=0" >> .env
 
+
       - name: Run tests
         working-directory: src
         run: echo "Call pytest command here!"

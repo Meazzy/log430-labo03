@@ -84,7 +84,6 @@ def update_stock_redis(order_items, operation):
             else:
                 product_id = item['product_id']
                 quantity = item['quantity']
-            # TODO: ajoutez plus d'information sur l'article
 
             product_info = session.query(Product).filter_by(id=product_id).first()
 
